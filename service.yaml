@@ -1,0 +1,33 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: blog-service
+spec:
+  selector:
+    app: blog-service
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  clusterIP: 10.96.85.118
+  type: ClusterIP
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: blog-service
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: blog-service
+    spec:
+      containers:
+
+        - image: dswoboda/blog-services:v0.1
+          imagePullPolicy: IfNotPresent
+          name: blog-service
+          ports:
+            - name: http
+              containerPort: 8080
