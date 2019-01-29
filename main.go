@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	log.Println("Starting BlogWebServices...")
+	log.Println("Starting BlogServices...")
 
 	var cfg config.Service
 	if err := envconfig.Init(&cfg); err != nil {
