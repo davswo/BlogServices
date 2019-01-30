@@ -6,13 +6,13 @@ import (
 )
 
 type blogRepositoryMemory struct {
-	BlogPost map[string]BlogPost
+	BlogPost map[int]BlogPost
 }
 
 // NewOrderRepositoryMemory is used to instantiate and return the DB implementation of the OrderRepository.
 func NewOrderRepositoryMemory() BlogRepository {
 	rand.Seed(time.Now().UnixNano())
-	return &blogRepositoryMemory{BlogPost: make(map[string]BlogPost)}
+	return &blogRepositoryMemory{BlogPost: make(map[int]BlogPost)}
 }
 
 func (repository *blogRepositoryMemory) InsertBlogPost(blogPost BlogPost) error {
@@ -29,11 +29,10 @@ func (repository *blogRepositoryMemory) GetBlogPosts() ([]BlogPost, error) {
 	return ret, nil
 }
 
-func mapID(repository *blogRepositoryMemory) string {
-	source := rand.NewSource(time.Now().UnixNano())
-	uid := rand.New(source)
-	if _, exists := repository.BlogPost[string(uid.Int())]; exists {
+func mapID(repository *blogRepositoryMemory) int {
+	uid := rand.Intn(10000)
+	if _, exists := repository.BlogPost[uid]; exists {
 		return mapID(repository)
 	}
-	return string(uid.Int())
+	return uid
 }

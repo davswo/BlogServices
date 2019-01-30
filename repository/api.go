@@ -3,6 +3,7 @@ package repository
 import "errors"
 
 type BlogPost struct {
+	BlogId int    `json: blogId`
 	Title  string `json:"title"`
 	Text   string `json:"text"`
 	Author string `json:"author"`
