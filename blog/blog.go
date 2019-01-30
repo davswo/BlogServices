@@ -33,8 +33,8 @@ func (blogService BlogService) InsertBlogPost(w http.ResponseWriter, r *http.Req
 	defer r.Body.Close()
 	var blogPost repository.BlogPost
 	err = json.Unmarshal(b, &blogPost)
-	if err != nil || blogPost.BlogId == "" || blogPost.Title == "" || blogPost.Text == "" || blogPost.Author == "" {
-		respondWithCodeAndMessage(http.StatusBadRequest, "Invalid request body, blogId / title / text / author can not be empty.", w)
+	if err != nil || blogPost.Title == "" || blogPost.Text == "" || blogPost.Author == "" {
+		respondWithCodeAndMessage(http.StatusBadRequest, "Invalid request body, title / text / author can not be empty.", w)
 		return
 	}
 
@@ -46,7 +46,7 @@ func (blogService BlogService) InsertBlogPost(w http.ResponseWriter, r *http.Req
 	case nil:
 		w.WriteHeader(http.StatusCreated)
 	case repository.ErrDuplicateKey:
-		respondWithCodeAndMessage(http.StatusConflict, fmt.Sprintf("BlogPost %s already exists.", blogPost.BlogId), w)
+		respondWithCodeAndMessage(http.StatusConflict, fmt.Sprintf("BlogPost already exists."), w)
 	default:
 		log.Error(fmt.Sprintf("Error inserting blogPost: '%+v'", blogPost), err)
 		respondWithCodeAndMessage(http.StatusInternalServerError, "Internal error.", w)

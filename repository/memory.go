@@ -1,7 +1,8 @@
 package repository
 
 import (
-	"fmt"
+	"math/rand"
+	"time"
 )
 
 type blogRepositoryMemory struct {
@@ -10,14 +11,12 @@ type blogRepositoryMemory struct {
 
 // NewOrderRepositoryMemory is used to instantiate and return the DB implementation of the OrderRepository.
 func NewOrderRepositoryMemory() BlogRepository {
+	rand.Seed(time.Now().UnixNano())
 	return &blogRepositoryMemory{BlogPost: make(map[string]BlogPost)}
 }
 
 func (repository *blogRepositoryMemory) InsertBlogPost(blogPost BlogPost) error {
-	id := mapID(blogPost)
-	if _, exists := repository.BlogPost[id]; exists {
-		return ErrDuplicateKey
-	}
+	id := mapID(repository)
 	repository.BlogPost[id] = blogPost
 	return nil
 }
@@ -30,6 +29,11 @@ func (repository *blogRepositoryMemory) GetBlogPosts() ([]BlogPost, error) {
 	return ret, nil
 }
 
-func mapID(bp BlogPost) string {
-	return fmt.Sprintf("%s", bp.BlogId)
+func mapID(repository *blogRepositoryMemory) string {
+	source := rand.NewSource(time.Now().UnixNano())
+	uid := rand.New(source)
+	if _, exists := repository.BlogPost[string(uid.Int())]; exists {
+		return mapID(repository)
+	}
+	return string(uid.Int())
 }
