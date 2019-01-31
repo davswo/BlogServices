@@ -22,7 +22,7 @@ type blogRepositoryMongo struct {
 func NewOrderRepositoryMongo() (BlogRepository, error) {
 	rand.Seed(time.Now().UnixNano())
 
-	client, err := mongo.Connect(context.TODO(), "mongodb://mongodb-service:27017")
+	client, err := mongo.Connect(context.TODO(), "mongodb://mongod-0.default.svc.cluster.local")
 	if err != nil {
 		return nil, errors.Wrap(err, "Error connecting to MongoDB %v.")
 	}
